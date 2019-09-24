@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_set>
-#include <map>
+#include <unordered_map>
 #include <algorithm>
 #include <stack>
 #include <queue>
@@ -13,13 +13,13 @@ class Graph
 {
 	T structure;
 	std::string start_vertex;
-	std::map<std::string, std::vector<std::string>> ribs;
+	std::unordered_map<std::string, std::vector<std::string>> ribs;
 	bool type_graph; // - directed(true), undirected(false);
 	bool search_type; // - breadth(true), deep(false);
 	std::unordered_set<std::string> visited;
 
 public:
-	Graph<T>(std::string set_type_graph, std::string set_vertex, std::map<std::string, std::vector<std::string>>& set_ribs, bool set_search_type)
+	Graph<T>(std::string set_type_graph, std::string set_vertex, std::unordered_map<std::string, std::vector<std::string>>& set_ribs, bool set_search_type)
 	{
 		if (set_type_graph == "d")type_graph = true;
 		else type_graph = false;
@@ -44,13 +44,28 @@ public:
 			}
 			std::cout << temp;
 			first_endl = true;
-			for (size_t i = 0; i < ribs[temp].size(); i++)
+			// перепил
+			if (search_type) 
 			{
-				if (!is_visited(ribs[temp].at(i)))
+				for (size_t i = 0; i < ribs[temp].size(); i++)
 				{
-					structure.push(ribs[temp].at(i));
+					if (!is_visited(ribs[temp].at(i)))
+					{
+						structure.push(ribs[temp].at(i));
+					}
 				}
 			}
+			else 
+			{
+				for (size_t i = ribs[temp].size(); i >= 0; i--)
+				{
+					if (!is_visited(ribs[temp].at(i)))
+					{
+						structure.push(ribs[temp].at(i));
+					}
+				}
+			}
+			
 		}
 	}
 private:
@@ -79,7 +94,7 @@ int main()
 {
 	std::string line, type_graph, vertex, search_type;
 	bool type_graph_bool;
-	std::map<std::string, std::vector<std::string>> ribs;
+	std::unordered_map<std::string, std::vector<std::string>> ribs;
 	std::getline(std::cin, line);
 	std::istringstream line_stream(line);
 
@@ -116,10 +131,10 @@ int main()
 	}
 	else 
 	{
-		for (auto& var : ribs)
+		/*for (auto& var : ribs)
 		{
 			std::reverse(var.second.begin(), var.second.end());
-		}
+		}*/
 		Graph<std::stack<std::string>> My_g(type_graph, vertex, ribs, false);
 		My_g.find_way();
 	}
