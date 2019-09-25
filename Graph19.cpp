@@ -44,24 +44,25 @@ public:
 			}
 			std::cout << temp;
 			first_endl = true;
-			// перепил
+			
+			std::sort(ribs[temp].begin(), ribs[temp].end());
 			if (search_type) 
 			{
-				for (size_t i = 0; i < ribs[temp].size(); i++)
+				for (int i = 0; i < ribs[temp].size(); i++)
 				{
-					if (!is_visited(ribs[temp].at(i)))
+					if (!is_visited(ribs[temp][i]))
 					{
-						structure.push(ribs[temp].at(i));
+						structure.push(ribs[temp][i]);
 					}
 				}
 			}
 			else 
 			{
-				for (size_t i = ribs[temp].size(); i >= 0; i--)
+				for (int i = ribs[temp].size() - 1; i >= 0; i--) 
 				{
-					if (!is_visited(ribs[temp].at(i)))
+					if (!is_visited(ribs[temp][i]))
 					{
-						structure.push(ribs[temp].at(i));
+						structure.push(ribs[temp][i]);
 					}
 				}
 			}
@@ -119,10 +120,7 @@ int main()
 		}
 	}
 
-	for (auto& var: ribs)
-	{
-		std::sort(var.second.begin(), var.second.end());
-	}
+	
 
 	if (search_type == "b") 
 	{
@@ -131,10 +129,6 @@ int main()
 	}
 	else 
 	{
-		/*for (auto& var : ribs)
-		{
-			std::reverse(var.second.begin(), var.second.end());
-		}*/
 		Graph<std::stack<std::string>> My_g(type_graph, vertex, ribs, false);
 		My_g.find_way();
 	}
